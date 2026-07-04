@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import { CartProvider } from './context/CartContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -25,7 +25,7 @@ function App() {
 
   return (
     <CartProvider>
-      <Router basename={process.env.PUBLIC_URL}>
+      <Router>
         <div className="min-h-screen flex flex-col">
           <Navbar onSearch={handleSearch} />
           <main className="flex-1">

@@ -109,7 +109,7 @@ const ProductDetail = () => {
         <div className="max-w-7xl mx-auto px-4 py-3 text-sm">
           <Link to="/" className="text-blue-700 hover:text-orange-700">首页</Link>
           <span className="mx-2 text-gray-500">/</span>
-          <a href={`${process.env.PUBLIC_URL}/#category-${product.categoryId}`} className="text-blue-700 hover:text-orange-700">{category?.title}</a>
+          <Link to={`/category/${product.categoryId}`} className="text-blue-700 hover:text-orange-700">{category?.title}</Link>
           <span className="mx-2 text-gray-500">/</span>
           <span className="text-gray-700">{product.asin}</span>
         </div>

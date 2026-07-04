@@ -7,6 +7,9 @@ import { recordEvent } from '../utils/analytics';
 
 const Home = ({ searchQuery, searchCategory }) => {
   const hasSearch = searchQuery && searchQuery.trim() !== '';
+  const scrollToSection = (sectionId) => {
+    document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
 
   if (hasSearch) {
     return (
@@ -45,18 +48,20 @@ const Home = ({ searchQuery, searchCategory }) => {
               从睡眠唤醒到宠物定位，从冰沙甜品到深层清洁，精选 5 大生活场景热卖商品。现在浏览分类，发现适合你家的智能装备。
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
-              <a
-                href="#category-sleep-smart-home"
+              <button
+                type="button"
+                onClick={() => scrollToSection('category-sleep-smart-home')}
                 className="bg-[#ffd814] hover:bg-[#f7ca00] text-gray-900 px-5 py-2 rounded-md font-semibold"
               >
                 立即选购
-              </a>
-              <a
-                href="#pdf-products"
+              </button>
+              <button
+                type="button"
+                onClick={() => scrollToSection('pdf-products')}
                 className="border border-white/70 hover:bg-white hover:text-[#131921] text-white px-5 py-2 rounded-md font-semibold"
               >
                 查看全部商品
-              </a>
+              </button>
             </div>
           </div>
         </div>
@@ -96,9 +101,10 @@ const Home = ({ searchQuery, searchCategory }) => {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
             {amazonCategories.map((category) => (
-              <a
+              <button
+                type="button"
                 key={category.id}
-                href={`#category-${category.id}`}
+                onClick={() => scrollToSection(`category-${category.id}`)}
                 className="group rounded-md overflow-hidden border border-gray-200 bg-gray-50 hover:border-[#ff9900]"
               >
                 <img src={category.image} alt={category.title} className="h-28 w-full object-cover group-hover:scale-[1.02] transition-transform" />
@@ -106,7 +112,7 @@ const Home = ({ searchQuery, searchCategory }) => {
                   <h3 className="font-bold text-gray-900">{category.title}</h3>
                   <p className="text-xs text-gray-600 mt-1 line-clamp-2">{category.subtitle}</p>
                 </div>
-              </a>
+              </button>
             ))}
           </div>
         </section>
@@ -122,7 +128,9 @@ const Home = ({ searchQuery, searchCategory }) => {
                     <h2 className="text-xl sm:text-2xl font-bold text-gray-900">{category.title}</h2>
                     <p className="text-sm text-gray-600 mt-1">{category.subtitle}</p>
                   </div>
-                  <a href="#top" className="text-sm text-blue-700 hover:text-orange-700">回到顶部</a>
+                  <button type="button" onClick={() => scrollToSection('top')} className="text-sm text-blue-700 hover:text-orange-700 text-left">
+                    回到顶部
+                  </button>
                 </div>
                 <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
                   {categoryProducts.map((product) => (
