@@ -1,4 +1,8 @@
-/* Custom CSS for the Amazon Clone */
+/* Custom CSS for the Amazon-style Chinese storefront */
+
+html {
+  scroll-behavior: smooth;
+}
 
 /* Line clamp utility for product titles */
 .line-clamp-2 {
@@ -17,7 +21,7 @@
 
 /* Smooth transitions */
 * {
-  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, box-shadow, transform;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 150ms;
 }
@@ -138,7 +142,7 @@ a:focus,
 input:focus,
 select:focus,
 textarea:focus {
-  outline: 2px solid #3B82F6;
+  outline: 2px solid #f59e0b;
   outline-offset: 2px;
 }
 

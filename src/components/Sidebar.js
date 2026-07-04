@@ -5,78 +5,78 @@ const Sidebar = ({ onCategoryFilter }) => {
 
   const categories = [
     {
-      title: "Electronics",
+      title: "电子数码",
       subcategories: [
-        { name: "Computers & Laptops", filter: "electronics-computers" },
-        { name: "Mobile Phones", filter: "electronics-phones" },
-        { name: "Audio & Headphones", filter: "electronics-audio" },
-        { name: "Gaming", filter: "electronics-gaming" },
-        { name: "Smart Home Devices", filter: "electronics-smart" }
+        { name: "电脑与笔记本", filter: "electronics-computers" },
+        { name: "手机通讯", filter: "electronics-phones" },
+        { name: "耳机与音响", filter: "electronics-audio" },
+        { name: "游戏娱乐", filter: "electronics-gaming" },
+        { name: "智能家居设备", filter: "electronics-smart" }
       ]
     },
     {
-      title: "Books",
+      title: "图书",
       subcategories: [
-        { name: "Fiction", filter: "books-fiction" },
-        { name: "Non-Fiction", filter: "books-nonfiction" },
-        { name: "Textbooks", filter: "books-textbooks" },
-        { name: "Children's Books", filter: "books-children" }
+        { name: "小说文学", filter: "books-fiction" },
+        { name: "非虚构图书", filter: "books-nonfiction" },
+        { name: "教材教辅", filter: "books-textbooks" },
+        { name: "儿童图书", filter: "books-children" }
       ]
     },
     {
-      title: "Home & Kitchen",
+      title: "家居厨房",
       subcategories: [
-        { name: "Furniture", filter: "home-furniture" },
-        { name: "Kitchen & Dining", filter: "home-kitchen" },
-        { name: "Home Decor", filter: "home-decor" },
-        { name: "Bedding & Bath", filter: "home-bedding" },
-        { name: "Storage & Organization", filter: "home-storage" }
+        { name: "家具", filter: "home-furniture" },
+        { name: "厨房与餐厨", filter: "home-kitchen" },
+        { name: "家居装饰", filter: "home-decor" },
+        { name: "床品卫浴", filter: "home-bedding" },
+        { name: "收纳整理", filter: "home-storage" }
       ]
     },
     {
-      title: "Clothing & Accessories",
+      title: "服饰配件",
       subcategories: [
-        { name: "Men's Clothing", filter: "clothing-men" },
-        { name: "Women's Clothing", filter: "clothing-women" },
-        { name: "Kids' Clothing", filter: "clothing-kids" },
-        { name: "Shoes", filter: "clothing-shoes" },
-        { name: "Jewelry & Watches", filter: "clothing-jewelry" }
+        { name: "男装", filter: "clothing-men" },
+        { name: "女装", filter: "clothing-women" },
+        { name: "童装", filter: "clothing-kids" },
+        { name: "鞋履", filter: "clothing-shoes" },
+        { name: "珠宝腕表", filter: "clothing-jewelry" }
       ]
     },
     {
-      title: "Sports & Outdoors",
+      title: "运动户外",
       subcategories: [
-        { name: "Exercise & Fitness", filter: "sports-fitness" },
-        { name: "Outdoor Recreation", filter: "sports-outdoor" },
-        { name: "Team Sports", filter: "sports-team" },
-        { name: "Water Sports", filter: "sports-water" }
+        { name: "运动健身", filter: "sports-fitness" },
+        { name: "户外装备", filter: "sports-outdoor" },
+        { name: "团队运动", filter: "sports-team" },
+        { name: "水上运动", filter: "sports-water" }
       ]
     },
     {
-      title: "Health & Beauty",
+      title: "个护健康",
       subcategories: [
-        { name: "Skincare", filter: "beauty-skincare" },
-        { name: "Makeup & Cosmetics", filter: "beauty-makeup" },
-        { name: "Health & Wellness", filter: "beauty-health" },
-        { name: "Personal Care", filter: "beauty-personal" }
+        { name: "护肤", filter: "beauty-skincare" },
+        { name: "彩妆香水", filter: "beauty-makeup" },
+        { name: "健康护理", filter: "beauty-health" },
+        { name: "个人护理", filter: "beauty-personal" }
       ]
     },
     {
-      title: "Tools & Home Improvement",
+      title: "工具与家装",
       subcategories: [
-        { name: "Power Tools", filter: "tools-power" },
-        { name: "Hand Tools", filter: "tools-hand" },
-        { name: "Hardware", filter: "tools-hardware" },
-        { name: "Electrical", filter: "tools-electrical" }
+        { name: "电动工具", filter: "tools-power" },
+        { name: "手动工具", filter: "tools-hand" },
+        { name: "五金配件", filter: "tools-hardware" },
+        { name: "电工电料", filter: "tools-electrical" }
       ]
     },
     {
-      title: "Toys & Games",
+      title: "玩具游戏",
       subcategories: [
-        { name: "Action Figures & Dolls", filter: "toys-figures" },
-        { name: "Board Games & Puzzles", filter: "toys-board" },
-        { name: "Educational Toys", filter: "toys-educational" },
-        { name: "Outdoor Play", filter: "toys-outdoor" }
+        { name: "手办与娃娃", filter: "toys-figures" },
+        { name: "桌游与拼图", filter: "toys-board" },
+        { name: "益智玩具", filter: "toys-educational" },
+        { name: "户外玩具", filter: "toys-outdoor" }
       ]
     }
   ];
@@ -113,7 +113,7 @@ const Sidebar = ({ onCategoryFilter }) => {
     <>
       {/* Mobile Toggle Button */}
       <button
-        className="lg:hidden fixed top-20 sm:top-24 left-2 sm:left-4 z-50 bg-gray-800 text-white p-2 rounded shadow-lg"
+        className="lg:hidden fixed top-20 sm:top-24 left-2 sm:left-4 z-50 bg-[#232f3e] text-white p-2 rounded shadow-lg"
         onClick={() => setIsOpen(!isOpen)}
       >
         <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -137,9 +137,9 @@ const Sidebar = ({ onCategoryFilter }) => {
         overflow-y-auto
       `}>
         {/* Sidebar Header */}
-        <div className="bg-gray-800 text-white p-3 sm:p-4 lg:hidden">
+        <div className="bg-[#232f3e] text-white p-3 sm:p-4 lg:hidden">
           <div className="flex items-center justify-between">
-            <h2 className="text-base sm:text-lg font-bold">Browse Categories</h2>
+            <h2 className="text-base sm:text-lg font-bold">浏览分类</h2>
             <button onClick={() => setIsOpen(false)}>
               <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -149,14 +149,14 @@ const Sidebar = ({ onCategoryFilter }) => {
         </div>
 
         <div className="p-3 sm:p-4">
-          <h2 className="hidden lg:block text-base lg:text-lg font-bold text-gray-900 mb-4">Shop by Category</h2>
+          <h2 className="hidden lg:block text-base lg:text-lg font-bold text-gray-900 mb-4">按分类选购</h2>
           
           {/* Show All Products Button */}
           <button
             onClick={() => handleSubcategoryClick('all')}
-            className="w-full mb-4 bg-orange-400 hover:bg-orange-500 text-gray-900 font-medium py-2 px-3 sm:px-4 rounded-md transition-colors duration-200 text-sm sm:text-base"
+            className="w-full mb-4 bg-[#ffd814] hover:bg-[#f7ca00] text-gray-900 font-medium py-2 px-3 sm:px-4 rounded-md transition-colors duration-200 text-sm sm:text-base"
           >
-            Show All Products
+            查看全部商品
           </button>
           
           {/* Categories */}
@@ -172,14 +172,14 @@ const Sidebar = ({ onCategoryFilter }) => {
 
           {/* Additional Links */}
           <div className="mt-6 sm:mt-8 pt-4 sm:pt-6 border-t border-gray-200">
-            <h3 className="text-sm font-semibold text-gray-900 mb-3">Quick Links</h3>
+            <h3 className="text-sm font-semibold text-gray-900 mb-3">快捷入口</h3>
             <ul className="space-y-2 text-sm">
               <li>
                 <button 
                   onClick={() => handleQuickLinkClick('bestsellers')}
                   className="text-blue-600 hover:text-blue-800 hover:underline text-left w-full py-1"
                 >
-                  Best Sellers
+                  畅销榜
                 </button>
               </li>
               <li>
@@ -187,7 +187,7 @@ const Sidebar = ({ onCategoryFilter }) => {
                   onClick={() => handleQuickLinkClick('new-releases')}
                   className="text-blue-600 hover:text-blue-800 hover:underline text-left w-full py-1"
                 >
-                  New Releases
+                  新品上架
                 </button>
               </li>
               <li>
@@ -195,7 +195,7 @@ const Sidebar = ({ onCategoryFilter }) => {
                   onClick={() => handleQuickLinkClick('deals')}
                   className="text-blue-600 hover:text-blue-800 hover:underline text-left w-full py-1"
                 >
-                  Today's Deals
+                  今日特惠
                 </button>
               </li>
               <li>
@@ -203,7 +203,7 @@ const Sidebar = ({ onCategoryFilter }) => {
                   onClick={() => handleQuickLinkClick('reviews')}
                   className="text-blue-600 hover:text-blue-800 hover:underline text-left w-full py-1"
                 >
-                  Customer Reviews
+                  高评价商品
                 </button>
               </li>
               <li>
@@ -211,7 +211,7 @@ const Sidebar = ({ onCategoryFilter }) => {
                   onClick={() => handleQuickLinkClick('gifts')}
                   className="text-blue-600 hover:text-blue-800 hover:underline text-left w-full py-1"
                 >
-                  Gift Ideas
+                  送礼精选
                 </button>
               </li>
             </ul>
@@ -219,21 +219,21 @@ const Sidebar = ({ onCategoryFilter }) => {
 
           {/* Help Section */}
           <div className="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-gray-200">
-            <h3 className="text-sm font-semibold text-gray-900 mb-3">Help & Settings</h3>
+            <h3 className="text-sm font-semibold text-gray-900 mb-3">帮助与设置</h3>
             <ul className="space-y-2 text-sm">
               <li>
                 <button className="text-gray-600 hover:text-gray-800 text-left w-full py-1">
-                  Your Account
+                  我的账户
                 </button>
               </li>
               <li>
                 <button className="text-gray-600 hover:text-gray-800 text-left w-full py-1">
-                  Customer Service
+                  客户服务
                 </button>
               </li>
               <li>
                 <button className="text-gray-600 hover:text-gray-800 text-left w-full py-1">
-                  Sign In
+                  登录
                 </button>
               </li>
             </ul>

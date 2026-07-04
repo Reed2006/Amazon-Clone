@@ -10,10 +10,13 @@ import CustomerService from './pages/CustomerService';
 import Registry from './pages/Registry';
 import GiftCards from './pages/GiftCards';
 import Sell from './pages/Sell';
+import ProductDetail from './pages/ProductDetail';
+import CategoryPage from './pages/CategoryPage';
+import AdminDashboard from './pages/AdminDashboard';
 
 function App() {
   const [searchQuery, setSearchQuery] = useState('');
-  const [searchCategory, setSearchCategory] = useState('All');
+  const [searchCategory, setSearchCategory] = useState('全部');
 
   const handleSearch = (query, category) => {
     setSearchQuery(query);
@@ -22,13 +25,16 @@ function App() {
 
   return (
     <CartProvider>
-      <Router>
+      <Router basename={process.env.PUBLIC_URL}>
         <div className="min-h-screen flex flex-col">
           <Navbar onSearch={handleSearch} />
           <main className="flex-1">
             <Routes>
               <Route path="/" element={<Home searchQuery={searchQuery} searchCategory={searchCategory} />} />
               <Route path="/cart" element={<Cart />} />
+              <Route path="/category/:categoryId" element={<CategoryPage />} />
+              <Route path="/product/:asin" element={<ProductDetail />} />
+              <Route path="/admin" element={<AdminDashboard />} />
               <Route path="/deals" element={<TodaysDeals />} />
               <Route path="/customer-service" element={<CustomerService />} />
               <Route path="/registry" element={<Registry />} />

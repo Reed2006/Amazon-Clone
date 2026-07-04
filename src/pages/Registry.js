@@ -6,58 +6,58 @@ const Registry = () => {
   const registryTypes = [
     {
       type: 'wedding',
-      title: 'Wedding Registry',
-      description: 'Celebrate your special day with gifts from friends and family',
+      title: '婚礼心愿单',
+      description: '与亲友分享婚礼所需物品',
       icon: '💒',
-      benefits: ['Free shipping', 'Completion discount', 'Extended returns']
+      benefits: ['免配送费', '补购优惠', '延长退换']
     },
     {
       type: 'baby',
-      title: 'Baby Registry',
-      description: 'Get everything you need for your new arrival',
+      title: '宝宝心愿单',
+      description: '为新生儿准备所需用品',
       icon: '👶',
-      benefits: ['Welcome Box', 'Completion discount', 'Universal registry']
+      benefits: ['欢迎礼盒', '补购优惠', '通用清单']
     },
     {
       type: 'birthday',
-      title: 'Birthday List',
-      description: 'Create a wish list for your special day',
+      title: '生日清单',
+      description: '为生日创建可分享的礼物清单',
       icon: '🎂',
-      benefits: ['Easy sharing', 'Surprise protection', 'Group gifting']
+      benefits: ['便捷分享', '惊喜保护', '多人合送']
     },
     {
       type: 'holiday',
-      title: 'Holiday List',
-      description: 'Share your holiday wishes with loved ones',
+      title: '节日清单',
+      description: '把节日愿望分享给亲友',
       icon: '🎁',
-      benefits: ['Seasonal items', 'Price tracking', 'Gift recommendations']
+      benefits: ['节日精选', '价格跟踪', '礼物推荐']
     }
   ];
 
   const sampleRegistries = [
     {
       id: 1,
-      name: 'Sarah & Mike\'s Wedding',
-      type: 'Wedding Registry',
-      date: 'June 15, 2024',
+      name: '林雨和周远的婚礼',
+      type: '婚礼心愿单',
+      date: '2026 年 9 月 18 日',
       items: 45,
       purchased: 23,
       image: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=300&h=200&fit=crop'
     },
     {
       id: 2,
-      name: 'Emma\'s Baby Shower',
-      type: 'Baby Registry',
-      date: 'Due March 2024',
+      name: '陈安的宝宝派对',
+      type: '宝宝心愿单',
+      date: '预产期 2026 年 10 月',
       items: 32,
       purchased: 18,
       image: 'https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?w=300&h=200&fit=crop'
     },
     {
       id: 3,
-      name: 'Alex\'s 30th Birthday',
-      type: 'Birthday List',
-      date: 'January 20, 2024',
+      name: '李然的 30 岁生日',
+      type: '生日清单',
+      date: '2026 年 8 月 20 日',
       items: 12,
       purchased: 8,
       image: 'https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?w=300&h=200&fit=crop'
@@ -69,8 +69,8 @@ const Registry = () => {
       <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 py-4 sm:py-6 lg:py-8">
         {/* Header */}
         <div className="text-center mb-8 sm:mb-12">
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2 sm:mb-4">Registry & Gift Lists</h1>
-          <p className="text-base sm:text-lg lg:text-xl text-gray-600">Create and share your wish lists for any occasion</p>
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2 sm:mb-4">心愿单与礼物清单</h1>
+          <p className="text-base sm:text-lg lg:text-xl text-gray-600">为婚礼、生日、新生儿和节日创建可分享清单</p>
         </div>
 
         {/* Tabs */}
@@ -85,7 +85,7 @@ const Registry = () => {
                     : 'text-gray-600 hover:text-gray-900'
                 }`}
               >
-                Create
+                创建
               </button>
               <button
                 onClick={() => setActiveTab('find')}
@@ -95,7 +95,7 @@ const Registry = () => {
                     : 'text-gray-600 hover:text-gray-900'
                 }`}
               >
-                Find
+                查找
               </button>
               <button
                 onClick={() => setActiveTab('manage')}
@@ -105,7 +105,7 @@ const Registry = () => {
                     : 'text-gray-600 hover:text-gray-900'
                 }`}
               >
-                Manage
+                管理
               </button>
             </div>
           </div>
@@ -115,8 +115,8 @@ const Registry = () => {
         {activeTab === 'create' && (
           <div>
             <div className="text-center mb-6 sm:mb-8">
-              <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2 sm:mb-4">Choose Your Registry Type</h2>
-              <p className="text-sm sm:text-base text-gray-600">Select the type of registry you'd like to create</p>
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2 sm:mb-4">选择清单类型</h2>
+              <p className="text-sm sm:text-base text-gray-600">选择你想创建的心愿单场景</p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8 sm:mb-12">
@@ -137,7 +137,7 @@ const Registry = () => {
                       ))}
                     </div>
                     <button className="w-full bg-blue-600 text-white py-2 px-3 sm:px-4 rounded-md hover:bg-blue-700 font-medium text-sm sm:text-base">
-                      Create {registry.title.split(' ')[0]}
+                      创建清单
                     </button>
                   </div>
                 </div>
@@ -147,22 +147,22 @@ const Registry = () => {
             {/* Getting Started */}
             <div className="bg-blue-50 rounded-lg p-4 sm:p-8">
               <div className="text-center">
-                <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6">How It Works</h3>
+                <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6">如何使用</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8">
                   <div className="text-center">
                     <div className="bg-blue-600 text-white w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center text-lg sm:text-xl font-bold mx-auto mb-3 sm:mb-4">1</div>
-                    <h4 className="font-semibold text-base sm:text-lg mb-2">Create Your Registry</h4>
-                    <p className="text-sm sm:text-base text-gray-600">Choose your registry type and add your favorite items</p>
+                    <h4 className="font-semibold text-base sm:text-lg mb-2">创建清单</h4>
+                    <p className="text-sm sm:text-base text-gray-600">选择清单类型并添加心仪商品</p>
                   </div>
                   <div className="text-center">
                     <div className="bg-blue-600 text-white w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center text-lg sm:text-xl font-bold mx-auto mb-3 sm:mb-4">2</div>
-                    <h4 className="font-semibold text-base sm:text-lg mb-2">Share with Friends</h4>
-                    <p className="text-sm sm:text-base text-gray-600">Send your registry link to family and friends</p>
+                    <h4 className="font-semibold text-base sm:text-lg mb-2">分享给亲友</h4>
+                    <p className="text-sm sm:text-base text-gray-600">把清单链接发送给家人和朋友</p>
                   </div>
                   <div className="text-center">
                     <div className="bg-blue-600 text-white w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center text-lg sm:text-xl font-bold mx-auto mb-3 sm:mb-4">3</div>
-                    <h4 className="font-semibold text-base sm:text-lg mb-2">Receive Gifts</h4>
-                    <p className="text-sm sm:text-base text-gray-600">Enjoy your gifts with free shipping and easy returns</p>
+                    <h4 className="font-semibold text-base sm:text-lg mb-2">接收礼物</h4>
+                    <p className="text-sm sm:text-base text-gray-600">享受便捷配送和简单退换服务</p>
                   </div>
                 </div>
               </div>
@@ -175,19 +175,19 @@ const Registry = () => {
           <div>
             <div className="max-w-2xl mx-auto">
               <div className="text-center mb-6 sm:mb-8">
-                <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2 sm:mb-4">Find a Registry or Gift List</h2>
-                <p className="text-sm sm:text-base text-gray-600">Search for someone's registry to find the perfect gift</p>
+                <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2 sm:mb-4">查找心愿单或礼物清单</h2>
+                <p className="text-sm sm:text-base text-gray-600">通过姓名查找清单，为对方挑选合适礼物</p>
               </div>
 
               <div className="bg-white rounded-lg shadow-md p-4 sm:p-8">
                 <div className="space-y-4 sm:space-y-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Search by Name
+                      按姓名搜索
                     </label>
                     <input
                       type="text"
-                      placeholder="Enter first and last name"
+                      placeholder="输入姓名"
                       className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base"
                     />
                   </div>
@@ -195,39 +195,39 @@ const Registry = () => {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        State/Province
+                        省份/地区
                       </label>
                       <select className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base">
-                        <option>Select State</option>
-                        <option>California</option>
-                        <option>New York</option>
-                        <option>Texas</option>
-                        <option>Florida</option>
+                        <option>选择地区</option>
+                        <option>上海</option>
+                        <option>北京</option>
+                        <option>广东</option>
+                        <option>浙江</option>
                       </select>
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Registry Type
+                        清单类型
                       </label>
                       <select className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:text-base">
-                        <option>All Registry Types</option>
-                        <option>Wedding</option>
-                        <option>Baby</option>
-                        <option>Birthday</option>
-                        <option>Holiday</option>
+                        <option>全部清单类型</option>
+                        <option>婚礼</option>
+                        <option>宝宝</option>
+                        <option>生日</option>
+                        <option>节日</option>
                       </select>
                     </div>
                   </div>
 
                   <button className="w-full bg-blue-600 text-white py-2 sm:py-3 px-4 sm:px-6 rounded-md hover:bg-blue-700 font-medium text-sm sm:text-base">
-                    Search Registries
+                    搜索清单
                   </button>
                 </div>
               </div>
 
               {/* Sample Results */}
               <div className="mt-6 sm:mt-8">
-                <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-3 sm:mb-4">Popular Registries</h3>
+                <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-3 sm:mb-4">热门清单</h3>
                 <div className="space-y-3 sm:space-y-4">
                   {sampleRegistries.map(registry => (
                     <div key={registry.id} className="bg-white rounded-lg shadow-md p-3 sm:p-4 flex flex-col sm:flex-row items-start sm:items-center space-y-3 sm:space-y-0 sm:space-x-4">
@@ -247,12 +247,12 @@ const Registry = () => {
                             ></div>
                           </div>
                           <span className="text-xs sm:text-sm text-gray-600 whitespace-nowrap">
-                            {registry.purchased}/{registry.items} items
+                            {registry.purchased}/{registry.items} 件
                           </span>
                         </div>
                       </div>
                       <button className="w-full sm:w-auto bg-blue-600 text-white px-3 sm:px-4 py-2 rounded-md hover:bg-blue-700 text-sm sm:text-base">
-                        View Registry
+                        查看清单
                       </button>
                     </div>
                   ))}
@@ -266,13 +266,13 @@ const Registry = () => {
         {activeTab === 'manage' && (
           <div>
             <div className="text-center mb-6 sm:mb-8">
-              <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2 sm:mb-4">Your Registries & Lists</h2>
-              <p className="text-sm sm:text-base text-gray-600">Manage your existing registries and gift lists</p>
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2 sm:mb-4">我的心愿单与礼物清单</h2>
+              <p className="text-sm sm:text-base text-gray-600">管理已经创建的心愿单和分享设置</p>
             </div>
 
             <div className="mb-4 sm:mb-6">
               <button className="w-full sm:w-auto bg-blue-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-md hover:bg-blue-700 font-medium text-sm sm:text-base">
-                Create New Registry
+                创建新清单
               </button>
             </div>
 
@@ -300,8 +300,8 @@ const Registry = () => {
 
                     <div className="mb-3 sm:mb-4">
                       <div className="flex justify-between text-xs sm:text-sm text-gray-600 mb-2">
-                        <span>Progress</span>
-                        <span>{registry.purchased}/{registry.items} items</span>
+                        <span>完成进度</span>
+                        <span>{registry.purchased}/{registry.items} 件</span>
                       </div>
                       <div className="bg-gray-200 rounded-full h-2">
                         <div 
@@ -313,10 +313,10 @@ const Registry = () => {
 
                     <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
                       <button className="flex-1 bg-blue-600 text-white py-2 px-3 sm:px-4 rounded-md hover:bg-blue-700 text-sm sm:text-base">
-                        Manage List
+                        管理清单
                       </button>
                       <button className="flex-1 border border-gray-300 text-gray-700 py-2 px-3 sm:px-4 rounded-md hover:bg-gray-50 text-sm sm:text-base">
-                        Share
+                        分享
                       </button>
                     </div>
                   </div>
