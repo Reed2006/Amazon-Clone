@@ -1,8 +1,11 @@
 const VISITOR_ID_KEY = 'amazonCloneVisitorId';
+const SESSION_ID_KEY = 'amazonCloneSessionId';
 const EVENTS_KEY = 'amazonCloneAnalyticsEvents';
 const EVENT_LIMIT = 5000;
+const ADMIN_TOKEN_KEY = 'amazonCloneAdminToken';
 
 let memoryVisitorId = null;
+let memorySessionId = null;
 
 const canUseStorage = () => typeof window !== 'undefined' && window.localStorage;
 
@@ -25,6 +28,20 @@ export const getVisitorId = () => {
   return visitorId;
 };
 
+export const getSessionId = () => {
+  if (!canUseStorage()) {
+    if (!memorySessionId) memorySessionId = createId('session');
+    return memorySessionId;
+  }
+
+  const existingId = window.sessionStorage.getItem(SESSION_ID_KEY);
+  if (existingId) return existingId;
+
+  const sessionId = createId('session');
+  window.sessionStorage.setItem(SESSION_ID_KEY, sessionId);
+  return sessionId;
+};
+
 export const getEvents = () => {
   if (!canUseStorage()) return [];
 
@@ -35,6 +52,27 @@ export const getEvents = () => {
   } catch (error) {
     return [];
   }
+};
+
+const shouldSyncRemote = () => {
+  if (typeof window === 'undefined') return false;
+  const { hostname, port } = window.location;
+  if (hostname === 'localhost' && port !== '8888') return false;
+  if (hostname === '127.0.0.1' && port !== '8888') return false;
+  return true;
+};
+
+const syncRemoteEvent = (event) => {
+  if (!shouldSyncRemote() || typeof window.fetch !== 'function') return;
+
+  window.fetch('/.netlify/functions/analytics', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ event }),
+    keepalive: true
+  }).catch(() => {
+    // Local recording remains the source of truth if the network request fails.
+  });
 };
 
 export const recordEvent = (type, payload = {}) => {
@@ -49,6 +87,7 @@ export const recordEvent = (type, payload = {}) => {
     type,
     timestamp: new Date().toISOString(),
     visitorId: getVisitorId(),
+    sessionId: getSessionId(),
     ...payload
   };
 
@@ -70,6 +109,7 @@ export const recordEvent = (type, payload = {}) => {
   const events = [...currentEvents, event].slice(-EVENT_LIMIT);
   window.localStorage.setItem(EVENTS_KEY, JSON.stringify(events));
   window.dispatchEvent(new Event('analytics-updated'));
+  syncRemoteEvent(event);
   return event;
 };
 
@@ -77,6 +117,44 @@ export const clearEvents = () => {
   if (!canUseStorage()) return;
   window.localStorage.removeItem(EVENTS_KEY);
   window.dispatchEvent(new Event('analytics-updated'));
+};
+
+export const getAdminToken = () => {
+  if (!canUseStorage()) return '';
+  return window.localStorage.getItem(ADMIN_TOKEN_KEY) || '';
+};
+
+export const setAdminToken = (token) => {
+  if (!canUseStorage()) return;
+  const trimmedToken = token.trim();
+  if (trimmedToken) {
+    window.localStorage.setItem(ADMIN_TOKEN_KEY, trimmedToken);
+  } else {
+    window.localStorage.removeItem(ADMIN_TOKEN_KEY);
+  }
+};
+
+export const fetchRemoteEvents = async (adminToken) => {
+  const response = await fetch('/.netlify/functions/analytics?limit=5000', {
+    headers: { 'X-Admin-Token': adminToken }
+  });
+  const data = await response.json();
+  if (!response.ok || !data.ok) {
+    throw new Error(data.error || '无法读取 Netlify 访客数据');
+  }
+  return Array.isArray(data.events) ? data.events : [];
+};
+
+export const clearRemoteEvents = async (adminToken) => {
+  const response = await fetch('/.netlify/functions/analytics', {
+    method: 'DELETE',
+    headers: { 'X-Admin-Token': adminToken }
+  });
+  const data = await response.json();
+  if (!response.ok || !data.ok) {
+    throw new Error(data.error || '无法清空 Netlify 访客数据');
+  }
+  return data;
 };
 
 export const formatDuration = (durationMs = 0) => {
@@ -112,8 +190,8 @@ const createProductStats = (product) => ({
   chatQuestions: 0
 });
 
-export const summarizeAnalytics = (products, categories) => {
-  const events = getEvents();
+export const summarizeAnalytics = (products, categories, eventOverride) => {
+  const events = Array.isArray(eventOverride) ? eventOverride : getEvents();
   const productStats = products.reduce((stats, product) => {
     stats[product.asin] = createProductStats(product);
     return stats;
@@ -132,6 +210,9 @@ export const summarizeAnalytics = (products, categories) => {
         asin: event.asin,
         productId: event.productId || product?.id || '',
         productTitle: event.productTitle || product?.title || event.asin,
+        sessionId: event.sessionId || '',
+        ipHash: event.ipHash || '',
+        userAgentHash: event.userAgentHash || '',
         clicked: false,
         entrySources: new Set(),
         dwellMs: 0,
@@ -144,6 +225,9 @@ export const summarizeAnalytics = (products, categories) => {
 
     const row = visitorProducts.get(key);
     row.lastSeen = event.timestamp || row.lastSeen;
+    row.sessionId = event.sessionId || row.sessionId;
+    row.ipHash = event.ipHash || row.ipHash;
+    row.userAgentHash = event.userAgentHash || row.userAgentHash;
     return row;
   };
 

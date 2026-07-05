@@ -1,7 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { amazonCategories, amazonProducts } from '../data/amazonProducts';
-import { clearEvents, formatDuration, summarizeAnalytics } from '../utils/analytics';
+import {
+  clearEvents,
+  clearRemoteEvents,
+  fetchRemoteEvents,
+  formatDuration,
+  getAdminToken,
+  setAdminToken,
+  summarizeAnalytics
+} from '../utils/analytics';
 
 const formatNumber = (value) => new Intl.NumberFormat('zh-CN').format(value || 0);
 
@@ -23,6 +31,37 @@ const formatSource = (source) => sourceLabels[source] || source || '未知来源
 
 const AdminDashboard = () => {
   const [, setRefreshKey] = useState(0);
+  const [adminTokenInput, setAdminTokenInput] = useState('');
+  const [remoteEvents, setRemoteEvents] = useState(null);
+  const [remoteStatus, setRemoteStatus] = useState('local');
+  const [remoteError, setRemoteError] = useState('');
+
+  const usingRemote = Array.isArray(remoteEvents);
+
+  const loadRemoteEvents = async (token = adminTokenInput) => {
+    const trimmedToken = token.trim();
+    if (!trimmedToken) {
+      setAdminToken('');
+      setRemoteEvents(null);
+      setRemoteStatus('local');
+      setRemoteError('');
+      return;
+    }
+
+    setRemoteStatus('loading');
+    setRemoteError('');
+    try {
+      const events = await fetchRemoteEvents(trimmedToken);
+      setAdminToken(trimmedToken);
+      setAdminTokenInput(trimmedToken);
+      setRemoteEvents(events);
+      setRemoteStatus('remote');
+    } catch (error) {
+      setRemoteEvents(null);
+      setRemoteStatus('error');
+      setRemoteError(error.message || '无法连接 Netlify 全站数据');
+    }
+  };
 
   useEffect(() => {
     const refresh = () => setRefreshKey((key) => key + 1);
@@ -34,7 +73,26 @@ const AdminDashboard = () => {
     };
   }, []);
 
-  const analytics = summarizeAnalytics(amazonProducts, amazonCategories);
+  useEffect(() => {
+    const savedToken = getAdminToken();
+    setAdminTokenInput(savedToken);
+    if (savedToken) {
+      setRemoteStatus('loading');
+      fetchRemoteEvents(savedToken)
+        .then((events) => {
+          setRemoteEvents(events);
+          setRemoteStatus('remote');
+          setRemoteError('');
+        })
+        .catch((error) => {
+          setRemoteEvents(null);
+          setRemoteStatus('error');
+          setRemoteError(error.message || '无法连接 Netlify 全站数据');
+        });
+    }
+  }, []);
+
+  const analytics = summarizeAnalytics(amazonProducts, amazonCategories, remoteEvents);
 
   const productRows = [...analytics.productRows]
     .sort((a, b) => (
@@ -57,7 +115,9 @@ const AdminDashboard = () => {
             <div>
               <p className="text-[#febd69] text-sm font-semibold mb-2">运营中心</p>
               <h1 className="text-2xl sm:text-3xl font-bold">智能生活商城数据看板</h1>
-              <p className="text-sm text-gray-300 mt-2">读取本站真实前端访问事件，按访客、商品和来源聚合。</p>
+              <p className="text-sm text-gray-300 mt-2">
+                {usingRemote ? '读取 Netlify 后端保存的全站真实访问事件。' : '当前显示本浏览器访问事件；输入管理员口令后可查看全站数据。'}
+              </p>
             </div>
             <div className="flex flex-wrap gap-2 text-sm">
               <Link to="/" className="border border-white/40 hover:border-[#febd69] px-3 py-2 rounded">
@@ -65,13 +125,24 @@ const AdminDashboard = () => {
               </Link>
               <button
                 type="button"
-                onClick={() => {
+                onClick={async () => {
+                  if (usingRemote && adminTokenInput.trim()) {
+                    try {
+                      await clearRemoteEvents(adminTokenInput.trim());
+                      setRemoteEvents([]);
+                      setRemoteError('');
+                    } catch (error) {
+                      setRemoteError(error.message || '清空全站数据失败');
+                    }
+                    return;
+                  }
+
                   clearEvents();
                   setRefreshKey((key) => key + 1);
                 }}
                 className="bg-[#febd69] text-gray-900 px-3 py-2 rounded font-semibold"
               >
-                清空本地数据
+                {usingRemote ? '清空全站数据' : '清空本地数据'}
               </button>
             </div>
           </div>
@@ -79,9 +150,61 @@ const AdminDashboard = () => {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 py-6 space-y-6">
+        <section className="bg-white rounded-md border border-gray-200 p-4 sm:p-5">
+          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
+            <div>
+              <h2 className="text-lg font-bold text-gray-900">Netlify 全站数据连接</h2>
+              <p className="text-sm text-gray-500 mt-1">
+                访客事件会写入 Netlify Functions + Blobs。管理员口令只保存在你的浏览器，用于读取后端事件。
+              </p>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-2 sm:items-center">
+              <input
+                type="password"
+                value={adminTokenInput}
+                onChange={(event) => setAdminTokenInput(event.target.value)}
+                placeholder="输入管理员口令"
+                className="w-full sm:w-72 rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-[#ff9900] focus:outline-none focus:ring-2 focus:ring-[#ff9900]/30"
+              />
+              <button
+                type="button"
+                onClick={() => loadRemoteEvents()}
+                className="rounded-md bg-[#232f3e] px-4 py-2 text-sm font-semibold text-white hover:bg-[#131921]"
+              >
+                {remoteStatus === 'loading' ? '连接中...' : '连接/刷新'}
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setAdminToken('');
+                  setAdminTokenInput('');
+                  setRemoteEvents(null);
+                  setRemoteStatus('local');
+                  setRemoteError('');
+                }}
+                className="rounded-md border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50"
+              >
+                使用本地数据
+              </button>
+            </div>
+          </div>
+          <div className="mt-3 flex flex-wrap gap-2 text-sm">
+            <span className={`rounded-full px-3 py-1 font-semibold ${
+              usingRemote ? 'bg-green-50 text-green-700' : 'bg-gray-100 text-gray-700'
+            }`}>
+              当前数据源：{usingRemote ? 'Netlify 全站数据' : '本浏览器本地数据'}
+            </span>
+            {remoteStatus === 'error' && (
+              <span className="rounded-full bg-red-50 px-3 py-1 font-semibold text-red-700">
+                {remoteError}
+              </span>
+            )}
+          </div>
+        </section>
+
         <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
           {[
-            { label: '访客数', value: formatNumber(analytics.visitorCount), note: '匿名本地 ID' },
+            { label: '访客数', value: formatNumber(analytics.visitorCount), note: '匿名访客 ID' },
             { label: '商品点击', value: formatNumber(analytics.totals.productClicks), note: '卡片/推荐点击' },
             { label: '详情访问', value: formatNumber(analytics.totals.detailViews), note: '进入商品页' },
             { label: '平均停留', value: formatDuration(analytics.totals.avgDwellMs), note: '商品详情页' },
@@ -103,7 +226,9 @@ const AdminDashboard = () => {
                 <h2 className="text-lg font-bold text-gray-900">分类行为表现</h2>
                 <p className="text-sm text-gray-500 mt-1">按 5 个分类汇总点击、详情访问、加购、结算和聊天问题。</p>
               </div>
-              <span className="text-xs bg-[#232f3e] text-white px-2 py-1 rounded">真实事件</span>
+              <span className="text-xs bg-[#232f3e] text-white px-2 py-1 rounded">
+                {usingRemote ? 'Netlify 全站事件' : '本地事件'}
+              </span>
             </div>
             <div className="space-y-4">
               {analytics.categoryRows.map((category) => (
@@ -132,17 +257,21 @@ const AdminDashboard = () => {
 
           <article className="bg-white rounded-md border border-gray-200 p-4 sm:p-5">
             <h2 className="text-lg font-bold text-gray-900">采集字段说明</h2>
-            <p className="text-sm text-gray-500 mt-1 mb-4">访客 ID 和事件只保存在当前浏览器，不向外部服务器发送。</p>
+            <p className="text-sm text-gray-500 mt-1 mb-4">
+              Netlify 部署后，事件会保存到后端；本地开发或未连接管理员口令时显示本浏览器数据。
+            </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
               {[
                 '访客唯一 ID',
+                '会话 ID',
                 '商品唯一 ID / ASIN',
                 '商品点击记录',
                 '详情页进入来源',
                 '详情页停留时长',
                 '是否加入购物车',
                 '是否点击结算',
-                '聊天问题数量'
+                '聊天问题数量',
+                'IP / UA 哈希'
               ].map((item) => (
                 <div key={item} className="rounded-md border border-gray-200 bg-gray-50 px-3 py-2 text-gray-700">
                   {item}
@@ -222,6 +351,7 @@ const AdminDashboard = () => {
               <thead>
                 <tr className="border-b border-gray-200 text-left text-gray-500">
                   <th className="py-3 pr-4 font-medium">访客 ID</th>
+                  <th className="py-3 pr-4 font-medium">会话 / 设备</th>
                   <th className="py-3 pr-4 font-medium">商品</th>
                   <th className="py-3 pr-4 font-medium">点击</th>
                   <th className="py-3 pr-4 font-medium">进入来源</th>
@@ -235,7 +365,7 @@ const AdminDashboard = () => {
               <tbody>
                 {visitorRows.length === 0 ? (
                   <tr>
-                    <td colSpan="9" className="py-8 text-center text-gray-500">
+                    <td colSpan="10" className="py-8 text-center text-gray-500">
                       暂无真实访问事件。先返回商城点击商品、加购或结算后，这里会自动出现数据。
                     </td>
                   </tr>
@@ -243,6 +373,13 @@ const AdminDashboard = () => {
                   <tr key={`${row.visitorId}-${row.asin}`} className="border-b border-gray-100">
                     <td className="py-3 pr-4 text-gray-700">
                       <span className="inline-block max-w-[180px] truncate align-bottom">{row.visitorId}</span>
+                    </td>
+                    <td className="py-3 pr-4 text-gray-700">
+                      <div className="max-w-[180px] text-xs leading-5">
+                        <div className="truncate">会话 {row.sessionId || '-'}</div>
+                        <div className="truncate">设备 {row.userAgentHash || '-'}</div>
+                        <div className="truncate">网络 {row.ipHash || '-'}</div>
+                      </div>
                     </td>
                     <td className="py-3 pr-4">
                       <div className="min-w-[260px]">
