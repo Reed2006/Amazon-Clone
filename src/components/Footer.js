@@ -31,7 +31,7 @@ const Footer = () => {
                 </li>
                 <li>
                   <button className="text-gray-300 hover:text-white hover:underline text-left">
-                    关于 Amazona
+                    关于 amazona.cn
                   </button>
                 </li>
                 <li>
@@ -41,12 +41,12 @@ const Footer = () => {
                 </li>
                 <li className="hidden sm:list-item">
                   <button className="text-gray-300 hover:text-white hover:underline text-left">
-                    Amazona 设备
+                    amazona.cn 设备
                   </button>
                 </li>
                 <li className="hidden sm:list-item">
                   <button className="text-gray-300 hover:text-white hover:underline text-left">
-                    Amazona 科学
+                    amazona.cn 科学
                   </button>
                 </li>
               </ul>
@@ -58,7 +58,7 @@ const Footer = () => {
               <ul className="space-y-1 sm:space-y-2 text-sm">
                 <li>
                   <button className="text-gray-300 hover:text-white hover:underline text-left">
-                    在 Amazona 销售商品
+                    在 amazona.cn 销售商品
                   </button>
                 </li>
                 <li>
@@ -88,7 +88,7 @@ const Footer = () => {
                 </li>
                 <li className="hidden lg:list-item">
                   <button className="text-gray-300 hover:text-white hover:underline text-left">
-                    开设 Amazona Hub
+                    开设 amazona.cn Hub
                   </button>
                 </li>
               </ul>
@@ -100,7 +100,7 @@ const Footer = () => {
               <ul className="space-y-1 sm:space-y-2 text-sm">
                 <li>
                   <button className="text-gray-300 hover:text-white hover:underline text-left">
-                    Amazona 商务卡
+                    amazona.cn 商务卡
                   </button>
                 </li>
                 <li>
@@ -157,7 +157,7 @@ const Footer = () => {
                 </li>
                 <li className="hidden lg:list-item">
                   <button className="text-gray-300 hover:text-white hover:underline text-left">
-                    Amazona 助手
+                    amazona.cn 助手
                   </button>
                 </li>
                 <li>
@@ -171,14 +171,14 @@ const Footer = () => {
         </div>
       </div>
 
-      {/* Amazona Logo and Language Selector */}
+      {/* amazona.cn Logo and Language Selector */}
       <div className="border-t border-gray-700 bg-[#232f3e]">
         <div className="max-w-7xl mx-auto px-4 py-4 sm:py-6">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
             {/* Logo */}
             <div className="flex items-center justify-center sm:justify-start">
               <div className="text-xl sm:text-2xl font-bold">
-                <span className="text-[#ff9900]">Amazona</span>
+                <span className="text-[#ff9900]">amazona</span><span className="text-sm text-gray-200">.cn</span>
               </div>
             </div>
 
@@ -206,11 +206,11 @@ const Footer = () => {
         <div className="max-w-7xl mx-auto px-4 py-4 sm:py-6">
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-4 sm:gap-6 text-xs">
             <div>
-              <h4 className="font-semibold mb-1 sm:mb-2">Amazona Music</h4>
+              <h4 className="font-semibold mb-1 sm:mb-2">amazona.cn Music</h4>
               <p className="text-gray-400">畅听海量音乐</p>
             </div>
             <div>
-              <h4 className="font-semibold mb-1 sm:mb-2">Amazona 广告</h4>
+              <h4 className="font-semibold mb-1 sm:mb-2">amazona.cn 广告</h4>
               <p className="text-gray-400">触达并吸引顾客</p>
             </div>
             <div className="hidden sm:block">
@@ -226,11 +226,11 @@ const Footer = () => {
               <p className="text-gray-400">轻松发布有声书</p>
             </div>
             <div className="hidden xl:block">
-              <h4 className="font-semibold mb-1 sm:mb-2">在 Amazona 开店</h4>
+              <h4 className="font-semibold mb-1 sm:mb-2">在 amazona.cn 开店</h4>
               <p className="text-gray-400">开通卖家账户</p>
             </div>
             <div className="hidden xl:block">
-              <h4 className="font-semibold mb-1 sm:mb-2">Amazona Business</h4>
+              <h4 className="font-semibold mb-1 sm:mb-2">amazona.cn Business</h4>
               <p className="text-gray-400">企业采购服务</p>
             </div>
           </div>
@@ -253,7 +253,7 @@ const Footer = () => {
               </button>
             </div>
             <div className="text-center sm:text-right">
-              © 1996-2026, Amazona 中文演示站
+              © 1996-2026, amazona.cn 中文演示站
             </div>
           </div>
         </div>

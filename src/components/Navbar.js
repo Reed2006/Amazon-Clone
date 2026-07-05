@@ -35,7 +35,7 @@ const Navbar = ({ onSearch }) => {
             {/* Logo */}
             <Link to="/" className="flex items-center space-x-2 flex-shrink-0">
               <div className="text-lg sm:text-2xl font-bold">
-                <span className="text-[#ff9900]">Amazona</span>
+                <span className="text-[#ff9900]">amazona</span><span className="text-xs sm:text-sm text-gray-200">.cn</span>
               </div>
             </Link>
 
@@ -69,7 +69,7 @@ const Navbar = ({ onSearch }) => {
                 </select>
                 <input
                   type="text"
-                  placeholder="搜索 Amazona 商品"
+                  placeholder="搜索 amazona.cn 商品"
                   className="flex-1 px-2 sm:px-4 py-2 text-gray-900 focus:outline-none text-sm sm:text-base rounded-l-md sm:rounded-l-none"
                   value={searchQuery}
                   onChange={handleInputChange}
