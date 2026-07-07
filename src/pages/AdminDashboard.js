@@ -265,6 +265,7 @@ const AdminDashboard = () => {
                 '访客唯一 ID',
                 '会话 ID',
                 '商品唯一 ID / ASIN',
+                '实验组 / 对照组',
                 '商品点击记录',
                 '详情页进入来源',
                 '详情页停留时长',
@@ -318,7 +319,16 @@ const AdminDashboard = () => {
                           <Link to={`/product/${product.asin}`} className="font-semibold text-gray-900 hover:text-orange-700 line-clamp-1">
                             {product.productTitle}
                           </Link>
-                          <div className="text-xs text-gray-500">ID {product.productId} · {product.asin}</div>
+                          <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-gray-500">
+                            <span>ID {product.productId} · {product.asin}</span>
+                            <span className={`rounded-full px-2 py-0.5 ${
+                              product.experimentGroup === 'control'
+                                ? 'bg-purple-50 text-purple-700'
+                                : 'bg-blue-50 text-blue-700'
+                            }`}>
+                              {product.experimentGroupLabel}
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </td>
@@ -384,7 +394,16 @@ const AdminDashboard = () => {
                     <td className="py-3 pr-4">
                       <div className="min-w-[260px]">
                         <div className="font-semibold text-gray-900 line-clamp-1">{row.productTitle}</div>
-                        <div className="text-xs text-gray-500">ID {row.productId} · {row.asin}</div>
+                        <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-gray-500">
+                          <span>ID {row.productId} · {row.asin}</span>
+                          <span className={`rounded-full px-2 py-0.5 ${
+                            row.experimentGroup === 'control'
+                              ? 'bg-purple-50 text-purple-700'
+                              : 'bg-blue-50 text-blue-700'
+                          }`}>
+                            {row.experimentGroupLabel}
+                          </span>
+                        </div>
                       </div>
                     </td>
                     <td className="py-3 pr-4 text-gray-700">{row.clicked ? '是' : '否'}</td>

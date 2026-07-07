@@ -97,7 +97,7 @@ const categoryDetailCopy = {
   }
 };
 
-const products = [
+const baseProducts = [
   ['B0DLLSCVZW', 'sleep-smart-home', 'Hatch Restore 3 智能日出闹钟', 'Hatch Baby', 169.99, 4.3, 5237, '日出唤醒闹钟、白噪音机和智能床头灯合一，适合建立无屏睡前流程。', ['可调亮度日出唤醒，帮助自然醒来', '内置白噪音和睡眠音景，适合卧室夜间使用', '数字显示与半圆形机身，适合床头桌摆放', '支持 2.4GHz Wi-Fi 和蓝牙连接', '品牌为 Hatch Baby'], ['Display Type: Digital', 'Power Source: Corded Electric', 'Connectivity: 2.4GHz Wi-Fi, Bluetooth', 'Room Type: Bedroom', 'ASIN: B0DLLSCVZW']],
   ['B0DCK7H8LV', 'sleep-smart-home', 'Yoto Player 3rd Gen 儿童无屏音频播放器', 'Yoto', 99.99, 4.7, 18400, '面向儿童的无屏音频播放器，用实体卡片播放故事、音乐和播客。', ['无屏交互，减少儿童使用屏幕时间', '实体音频卡片操作直观，适合低龄儿童', '可作为睡前故事、音乐和白噪音播放器', '适合家庭、旅行和儿童房场景', '版本和套装信息可在商品参数中查看'], ['Generation: 3rd Gen', 'Use: Kids audio player', 'Screen-free: Yes', 'Content: Cards / stories / music', 'ASIN: B0DCK7H8LV']],
   ['B0BJMNYJTR', 'sleep-smart-home', 'Toniebox 1 Dr. Seuss 音频播放器套装', 'Tonies', 99.99, 4.8, 9200, '柔软儿童音频盒，搭配 Dr. Seuss 主题角色播放故事内容。', ['通过放置角色玩偶触发音频播放', '外壳柔软，适合儿童房和亲子共读', 'Dr. Seuss 主题内容适合英文启蒙', '无需复杂屏幕菜单，孩子可独立操作', '套装内容以页面展示为准'], ['Theme: Dr. Seuss', 'Use: Kids audio stories', 'Control: Character figure', 'Audience: Children', 'ASIN: B0BJMNYJTR']],
@@ -125,16 +125,68 @@ const products = [
   ['B0DD1K3HD6', 'beauty-recovery', 'Therabody SmartGoggles 2nd Gen', 'Therabody', 199.00, 4.2, 1600, '第二代智能眼部放松设备，面向压力缓解和睡前恢复。', ['眼周热敷、按摩和放松体验', '适合屏幕使用多、压力大或睡前放松人群', '智能模式帮助调整恢复节奏', '便携形态，适合家中或旅行使用', '具体模式和续航以页面展示为准'], ['Brand: Therabody', 'Generation: 2nd Gen', 'Use: Eye relaxation', 'Category: Recovery wearable', 'ASIN: B0DD1K3HD6']]
 ];
 
-export const amazonProducts = products.map((item, index) => {
+const controlPrefixes = ['核心功能', '适用场景', '购买关注', '体验细节', '页面提示'];
+
+const rewriteControlDescription = (description) => (
+  `${description.replace('适合', '更适合').replace('用于', '可用于')} 信息页重新梳理了核心功能、使用限制和购买前确认点，方便在同类商品间快速比较。`
+);
+
+const rewriteControlHighlights = (highlights) => (
+  highlights.map((highlight, index) => {
+    const prefix = controlPrefixes[index] || '补充说明';
+    return `${prefix}: ${highlight.replace('以页面展示为准', '请以页面展示为准').replace('适合', '更适合')}`;
+  })
+);
+
+const createControlProduct = (item, index) => {
+  const [asin, categoryId, title, brand, price, rating, reviewCount, description, highlights, specs] = item;
+
+  return [
+    `${asin}-C${String(index + 26).padStart(2, '0')}`,
+    categoryId,
+    title,
+    brand,
+    price,
+    rating,
+    reviewCount,
+    rewriteControlDescription(description),
+    rewriteControlHighlights(highlights),
+    specs
+  ];
+};
+
+const productVariants = [
+  ...baseProducts.map((item, index) => ({
+    item,
+    imageIndex: index,
+    sourceAsin: item[0],
+    experimentGroup: 'original',
+    experimentGroupLabel: '原始组'
+  })),
+  ...baseProducts.map((item, index) => ({
+    item: createControlProduct(item, index),
+    imageIndex: index,
+    sourceAsin: item[0],
+    experimentGroup: 'control',
+    experimentGroupLabel: '对照组'
+  }))
+];
+
+export const amazonProducts = productVariants.map((variant, index) => {
+  const { item, imageIndex, sourceAsin, experimentGroup, experimentGroupLabel } = variant;
   const [asin, categoryId, title, brand, price, rating, reviewCount, description, highlights, specs] = item;
   const categoryCopy = categoryDetailCopy[categoryId];
-  const image = `${process.env.PUBLIC_URL || ''}/Images/amazon-products/${productImages[index]}`;
+  const image = `${process.env.PUBLIC_URL || ''}/Images/amazon-products/${productImages[imageIndex]}`;
   const category = amazonCategories.find((categoryItem) => categoryItem.id === categoryId);
   const productType = title.replace(brand, '').replace(/[，,].*$/, '').trim();
 
   return {
     id: index + 1,
     asin,
+    sourceAsin,
+    sourceIndex: imageIndex + 1,
+    experimentGroup,
+    experimentGroupLabel,
     categoryId,
     title,
     brand,
@@ -146,11 +198,12 @@ export const amazonProducts = products.map((item, index) => {
     specs: [
       `品牌: ${brand}`,
       `分类: ${category?.title || categoryId}`,
+      `原商品 ASIN: ${sourceAsin}`,
       ...specs
     ],
     image,
     gallery: [image, image, image, image],
-    amazonUrl: `https://www.amazon.com/dp/${asin}`,
+    amazonUrl: `https://www.amazon.com/dp/${sourceAsin}`,
     availability: index % 5 === 0 ? '库存紧张，建议尽快下单' : '有货，可加入购物车',
     delivery: index % 3 === 0 ? '预计 2-4 个工作日送达' : '预计明日达或隔日达',
     returnPolicy: '支持 30 天内退换，商品需保持完整包装和配件齐全。',

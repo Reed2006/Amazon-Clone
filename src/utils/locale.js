@@ -52,6 +52,10 @@ const productCopy = {
 };
 
 export const localizeProduct = (product) => {
+  if (product.asin) {
+    return product;
+  }
+
   const copy = productCopy[product.id];
 
   if (!copy) {

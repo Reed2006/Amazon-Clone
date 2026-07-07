@@ -10,6 +10,12 @@ const Home = ({ searchQuery, searchCategory }) => {
   const scrollToSection = (sectionId) => {
     document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
+  const sortPairedProducts = (products) => (
+    [...products].sort((a, b) => (
+      (a.sourceIndex || a.id) - (b.sourceIndex || b.id) ||
+      a.id - b.id
+    ))
+  );
 
   if (hasSearch) {
     return (
@@ -25,7 +31,9 @@ const Home = ({ searchQuery, searchCategory }) => {
     );
   }
 
-  const featuredProducts = amazonProducts.slice(0, 4);
+  const featuredProducts = sortPairedProducts(amazonProducts.filter((product) => (
+    product.sourceAsin === 'B0DLLSCVZW' || product.sourceAsin === 'B0DCK7H8LV'
+  )));
 
   return (
     <div id="top" className="min-h-screen bg-[#eaeded]">
@@ -95,9 +103,9 @@ const Home = ({ searchQuery, searchCategory }) => {
           <div className="flex items-center justify-between gap-4 mb-4">
             <div>
               <h2 className="text-xl sm:text-2xl font-bold text-gray-900">按分类选购</h2>
-              <p className="text-sm text-gray-600">五大生活场景专区，每个专区精选 5 件热卖商品。</p>
+              <p className="text-sm text-gray-600">五大生活场景专区，每个专区精选 10 件热卖商品。</p>
             </div>
-            <span className="hidden sm:inline text-sm text-gray-500">5 个分类 · 25 件商品</span>
+            <span className="hidden sm:inline text-sm text-gray-500">5 个分类 · 50 件商品</span>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
             {amazonCategories.map((category) => (
@@ -119,7 +127,7 @@ const Home = ({ searchQuery, searchCategory }) => {
 
         <div id="pdf-products" className="space-y-6 pb-10">
           {amazonCategories.map((category) => {
-            const categoryProducts = amazonProducts.filter((product) => product.categoryId === category.id);
+            const categoryProducts = sortPairedProducts(amazonProducts.filter((product) => product.categoryId === category.id));
 
             return (
               <section key={category.id} id={`category-${category.id}`} className="bg-white rounded-md p-4 sm:p-5 shadow-sm scroll-mt-28">

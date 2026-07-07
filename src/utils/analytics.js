@@ -169,9 +169,12 @@ export const formatDuration = (durationMs = 0) => {
 
 const toProductPayload = (product) => ({
   asin: product.asin,
+  sourceAsin: product.sourceAsin || product.asin,
   productId: product.id,
   productTitle: product.title,
-  categoryId: product.categoryId
+  categoryId: product.categoryId,
+  experimentGroup: product.experimentGroup || 'original',
+  experimentGroupLabel: product.experimentGroupLabel || '原始组'
 });
 
 const createProductStats = (product) => ({
@@ -208,8 +211,11 @@ export const summarizeAnalytics = (products, categories, eventOverride) => {
       visitorProducts.set(key, {
         visitorId: event.visitorId || 'unknown',
         asin: event.asin,
+        sourceAsin: event.sourceAsin || product?.sourceAsin || event.asin,
         productId: event.productId || product?.id || '',
         productTitle: event.productTitle || product?.title || event.asin,
+        experimentGroup: event.experimentGroup || product?.experimentGroup || 'unknown',
+        experimentGroupLabel: event.experimentGroupLabel || product?.experimentGroupLabel || '未知组别',
         sessionId: event.sessionId || '',
         ipHash: event.ipHash || '',
         userAgentHash: event.userAgentHash || '',

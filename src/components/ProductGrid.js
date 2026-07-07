@@ -3,6 +3,13 @@ import ProductCard from './ProductCard';
 import { amazonCategories, amazonProducts } from '../data/amazonProducts';
 import { getSearchText } from '../utils/locale';
 
+const sortPairedProducts = (products) => (
+  products.sort((a, b) => (
+    (a.sourceIndex || a.id) - (b.sourceIndex || b.id) ||
+    a.id - b.id
+  ))
+);
+
 const ProductGrid = ({ categoryFilter, onClearFilter, searchQuery, searchCategory }) => {
   const [sortBy, setSortBy] = useState('featured');
   const [currentPage, setCurrentPage] = useState(1);
@@ -56,7 +63,7 @@ const ProductGrid = ({ categoryFilter, onClearFilter, searchQuery, searchCategor
       case 'newest':
         return products.sort((a, b) => b.id - a.id);
       default:
-        return products;
+        return sortPairedProducts(products);
     }
   }, [filteredProducts, sortBy]);
 

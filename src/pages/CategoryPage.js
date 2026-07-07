@@ -6,7 +6,12 @@ import { amazonCategories, amazonProducts, getCategoryById } from '../data/amazo
 const CategoryPage = () => {
   const { categoryId } = useParams();
   const category = getCategoryById(categoryId);
-  const products = amazonProducts.filter((product) => product.categoryId === categoryId);
+  const products = amazonProducts
+    .filter((product) => product.categoryId === categoryId)
+    .sort((a, b) => (
+      (a.sourceIndex || a.id) - (b.sourceIndex || b.id) ||
+      a.id - b.id
+    ));
 
   if (!category) {
     return (
