@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useParams } from 'react-router-dom';
+import ProductSurveyModal from '../components/ProductSurveyModal';
 import StockChatModal from '../components/StockChatModal';
 import { useCart } from '../context/CartContext';
 import { amazonProducts, getCategoryById, getProductByAsin } from '../data/amazonProducts';
@@ -24,6 +25,7 @@ const ProductDetail = () => {
   const product = getProductByAsin(asin);
   const { addToCart, isInCart, getItemQuantity } = useCart();
   const [stockModalOpen, setStockModalOpen] = useState(false);
+  const [surveyModalOpen, setSurveyModalOpen] = useState(false);
 
   const entrySource = location.state?.entrySource || 'direct-link';
 
@@ -60,6 +62,16 @@ const ProductDetail = () => {
       recordDwell();
     };
   }, [entrySource, product]);
+
+  useEffect(() => {
+    if (!product) return undefined;
+    setSurveyModalOpen(false);
+    const timer = window.setTimeout(() => {
+      setSurveyModalOpen(true);
+    }, 700);
+
+    return () => window.clearTimeout(timer);
+  }, [product]);
 
   const handleAddToCart = () => {
     recordEvent('add_to_cart', {
@@ -307,6 +319,11 @@ const ProductDetail = () => {
         onClose={() => setStockModalOpen(false)}
         product={product}
         source="product-detail"
+      />
+      <ProductSurveyModal
+        open={surveyModalOpen}
+        onClose={() => setSurveyModalOpen(false)}
+        product={product}
       />
     </div>
   );

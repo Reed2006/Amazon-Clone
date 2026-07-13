@@ -104,6 +104,7 @@ const AdminDashboard = () => {
 
   const visitorRows = [...analytics.visitorProductRows]
     .sort((a, b) => new Date(b.lastSeen || 0) - new Date(a.lastSeen || 0));
+  const surveyRows = analytics.surveyRows || [];
 
   const maxCategoryClicks = Math.max(1, ...analytics.categoryRows.map((category) => category.clicks));
 
@@ -202,14 +203,15 @@ const AdminDashboard = () => {
           </div>
         </section>
 
-        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
+        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-7 gap-4">
           {[
             { label: '访客数', value: formatNumber(analytics.visitorCount), note: '匿名访客 ID' },
             { label: '商品点击', value: formatNumber(analytics.totals.productClicks), note: '卡片/推荐点击' },
             { label: '详情访问', value: formatNumber(analytics.totals.detailViews), note: '进入商品页' },
             { label: '平均停留', value: formatDuration(analytics.totals.avgDwellMs), note: '商品详情页' },
             { label: '加购次数', value: formatNumber(analytics.totals.addToCart), note: '按商品记录' },
-            { label: '结算点击', value: formatNumber(analytics.totals.checkoutClicks), note: '去结算/一键购买' }
+            { label: '结算点击', value: formatNumber(analytics.totals.checkoutClicks), note: '去结算/一键购买' },
+            { label: '问卷提交', value: formatNumber(analytics.totals.surveySubmissions), note: '领取代金券' }
           ].map((metric) => (
             <article key={metric.label} className="bg-white rounded-md p-4 border border-gray-200">
               <div className="text-sm text-gray-500">{metric.label}</div>
@@ -272,6 +274,7 @@ const AdminDashboard = () => {
                 '是否加入购物车',
                 '是否点击结算',
                 '聊天问题数量',
+                '问卷填写结果',
                 'IP / UA 哈希'
               ].map((item) => (
                 <div key={item} className="rounded-md border border-gray-200 bg-gray-50 px-3 py-2 text-gray-700">
@@ -306,7 +309,8 @@ const AdminDashboard = () => {
                   <th className="py-3 pr-4 font-medium">平均停留</th>
                   <th className="py-3 pr-4 font-medium">加购</th>
                   <th className="py-3 pr-4 font-medium">结算</th>
-                  <th className="py-3 font-medium">聊天</th>
+                  <th className="py-3 pr-4 font-medium">聊天</th>
+                  <th className="py-3 font-medium">问卷</th>
                 </tr>
               </thead>
               <tbody>
@@ -340,7 +344,72 @@ const AdminDashboard = () => {
                     <td className="py-3 pr-4 text-gray-700">{formatDuration(product.avgDwellMs)}</td>
                     <td className="py-3 pr-4 text-gray-700">{formatNumber(product.addToCart)}</td>
                     <td className="py-3 pr-4 text-gray-700">{formatNumber(product.checkoutClicks)}</td>
-                    <td className="py-3 text-gray-700">{formatNumber(product.chatQuestions)}</td>
+                    <td className="py-3 pr-4 text-gray-700">{formatNumber(product.chatQuestions)}</td>
+                    <td className="py-3 text-gray-700">{formatNumber(product.surveySubmissions)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section className="bg-white rounded-md border border-gray-200 p-4 sm:p-5">
+          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2 mb-4">
+            <div>
+              <h2 className="text-lg font-bold text-gray-900">问卷填写结果</h2>
+              <p className="text-sm text-gray-500 mt-1">按访客 ID 和商品 ID 对应整理，记录用户来源答案和代金券领取状态。</p>
+            </div>
+            <span className="text-sm text-gray-500">{formatNumber(surveyRows.length)} 条问卷记录</span>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="min-w-full text-sm">
+              <thead>
+                <tr className="border-b border-gray-200 text-left text-gray-500">
+                  <th className="py-3 pr-4 font-medium">访客 ID</th>
+                  <th className="py-3 pr-4 font-medium">商品</th>
+                  <th className="py-3 pr-4 font-medium">看到商品的来源</th>
+                  <th className="py-3 pr-4 font-medium">AI 网页端</th>
+                  <th className="py-3 pr-4 font-medium">代金券</th>
+                  <th className="py-3 font-medium">提交时间</th>
+                </tr>
+              </thead>
+              <tbody>
+                {surveyRows.length === 0 ? (
+                  <tr>
+                    <td colSpan="6" className="py-8 text-center text-gray-500">
+                      暂无问卷提交。用户进入商品页并提交问卷后，这里会按访客和商品显示答案。
+                    </td>
+                  </tr>
+                ) : surveyRows.map((row) => (
+                  <tr key={`${row.visitorId}-${row.asin}-survey`} className="border-b border-gray-100">
+                    <td className="py-3 pr-4 text-gray-700">
+                      <span className="inline-block max-w-[180px] truncate align-bottom">{row.visitorId}</span>
+                    </td>
+                    <td className="py-3 pr-4">
+                      <div className="min-w-[280px]">
+                        <Link to={`/product/${row.asin}`} className="font-semibold text-gray-900 hover:text-orange-700 line-clamp-1">
+                          {row.productTitle}
+                        </Link>
+                        <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-gray-500">
+                          <span>ID {row.productId} · {row.asin}</span>
+                          <span className={`rounded-full px-2 py-0.5 ${
+                            row.experimentGroup === 'control'
+                              ? 'bg-purple-50 text-purple-700'
+                              : 'bg-blue-50 text-blue-700'
+                          }`}>
+                            {row.experimentGroupLabel}
+                          </span>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="py-3 pr-4 text-gray-700">{row.surveyDiscoverySourceLabel || '-'}</td>
+                    <td className="py-3 pr-4 text-gray-700">{row.surveyAiPlatformLabel || '-'}</td>
+                    <td className="py-3 pr-4 text-gray-700">
+                      {row.voucherAmount ? `${row.voucherAmount} ${row.voucherCurrency || 'RMB'}` : '-'}
+                    </td>
+                    <td className="py-3 text-gray-700 whitespace-nowrap">
+                      {row.surveySubmittedAt ? new Date(row.surveySubmittedAt).toLocaleString('zh-CN') : '-'}
+                    </td>
                   </tr>
                 ))}
               </tbody>

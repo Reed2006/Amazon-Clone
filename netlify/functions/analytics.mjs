@@ -11,7 +11,8 @@ const ALLOWED_EVENT_TYPES = new Set([
   'detail_dwell',
   'add_to_cart',
   'checkout_click',
-  'chat_question'
+  'chat_question',
+  'survey_submit'
 ]);
 
 const responseHeaders = {
@@ -75,7 +76,13 @@ const sanitizeEvent = (input) => {
     durationMs: Number.isFinite(Number(rawEvent.durationMs)) ? Number(rawEvent.durationMs) : undefined,
     checkoutType: rawEvent.checkoutType ? String(rawEvent.checkoutType).slice(0, 80) : undefined,
     quantity: Number.isFinite(Number(rawEvent.quantity)) ? Number(rawEvent.quantity) : undefined,
-    questionLength: Number.isFinite(Number(rawEvent.questionLength)) ? Number(rawEvent.questionLength) : undefined
+    questionLength: Number.isFinite(Number(rawEvent.questionLength)) ? Number(rawEvent.questionLength) : undefined,
+    surveyDiscoverySource: rawEvent.surveyDiscoverySource ? String(rawEvent.surveyDiscoverySource).slice(0, 80) : undefined,
+    surveyDiscoverySourceLabel: rawEvent.surveyDiscoverySourceLabel ? String(rawEvent.surveyDiscoverySourceLabel).slice(0, 120) : undefined,
+    surveyAiPlatform: rawEvent.surveyAiPlatform ? String(rawEvent.surveyAiPlatform).slice(0, 80) : undefined,
+    surveyAiPlatformLabel: rawEvent.surveyAiPlatformLabel ? String(rawEvent.surveyAiPlatformLabel).slice(0, 120) : undefined,
+    voucherAmount: Number.isFinite(Number(rawEvent.voucherAmount)) ? Number(rawEvent.voucherAmount) : undefined,
+    voucherCurrency: rawEvent.voucherCurrency ? String(rawEvent.voucherCurrency).slice(0, 20) : undefined
   };
 };
 

@@ -190,7 +190,8 @@ const createProductStats = (product) => ({
   dwellSamples: 0,
   addToCart: 0,
   checkoutClicks: 0,
-  chatQuestions: 0
+  chatQuestions: 0,
+  surveySubmissions: 0
 });
 
 export const summarizeAnalytics = (products, categories, eventOverride) => {
@@ -225,6 +226,14 @@ export const summarizeAnalytics = (products, categories, eventOverride) => {
         addToCart: 0,
         checkoutClicks: 0,
         chatQuestions: 0,
+        surveySubmissions: 0,
+        surveyDiscoverySource: '',
+        surveyDiscoverySourceLabel: '',
+        surveyAiPlatform: '',
+        surveyAiPlatformLabel: '',
+        voucherAmount: 0,
+        voucherCurrency: '',
+        surveySubmittedAt: '',
         lastSeen: event.timestamp
       });
     }
@@ -281,6 +290,20 @@ export const summarizeAnalytics = (products, categories, eventOverride) => {
       if (stats) stats.chatQuestions += 1;
       if (row) row.chatQuestions += 1;
     }
+
+    if (event.type === 'survey_submit') {
+      if (stats) stats.surveySubmissions += 1;
+      if (row) {
+        row.surveySubmissions += 1;
+        row.surveyDiscoverySource = event.surveyDiscoverySource || row.surveyDiscoverySource;
+        row.surveyDiscoverySourceLabel = event.surveyDiscoverySourceLabel || row.surveyDiscoverySourceLabel;
+        row.surveyAiPlatform = event.surveyAiPlatform || '';
+        row.surveyAiPlatformLabel = event.surveyAiPlatformLabel || '';
+        row.voucherAmount = Number(event.voucherAmount) || row.voucherAmount;
+        row.voucherCurrency = event.voucherCurrency || row.voucherCurrency;
+        row.surveySubmittedAt = event.timestamp || row.surveySubmittedAt;
+      }
+    }
   });
 
   const productRows = Object.values(productStats).map((stats) => ({
@@ -310,6 +333,10 @@ export const summarizeAnalytics = (products, categories, eventOverride) => {
     entrySources: Array.from(row.entrySources)
   }));
 
+  const surveyRows = visitorProductRows
+    .filter((row) => row.surveySubmissions > 0)
+    .sort((a, b) => new Date(b.surveySubmittedAt || b.lastSeen || 0) - new Date(a.surveySubmittedAt || a.lastSeen || 0));
+
   const totalDwellMs = productRows.reduce((total, product) => total + product.totalDwellMs, 0);
   const dwellSamples = productRows.reduce((total, product) => total + product.dwellSamples, 0);
   const totalChatQuestions = events.filter((event) => event.type === 'chat_question').length;
@@ -320,12 +347,14 @@ export const summarizeAnalytics = (products, categories, eventOverride) => {
     productRows,
     categoryRows,
     visitorProductRows,
+    surveyRows,
     totals: {
       productClicks: productRows.reduce((total, product) => total + product.clicks, 0),
       detailViews: productRows.reduce((total, product) => total + product.detailViews, 0),
       addToCart: productRows.reduce((total, product) => total + product.addToCart, 0),
       checkoutClicks: productRows.reduce((total, product) => total + product.checkoutClicks, 0),
       chatQuestions: totalChatQuestions,
+      surveySubmissions: surveyRows.reduce((total, row) => total + row.surveySubmissions, 0),
       avgDwellMs: dwellSamples ? Math.round(totalDwellMs / dwellSamples) : 0
     }
   };
