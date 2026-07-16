@@ -369,6 +369,7 @@ const AdminDashboard = () => {
                   <th className="py-3 pr-4 font-medium">商品</th>
                   <th className="py-3 pr-4 font-medium">看到商品的来源</th>
                   <th className="py-3 pr-4 font-medium">AI 网页端</th>
+                  <th className="py-3 pr-4 font-medium">AI 问答问题</th>
                   <th className="py-3 pr-4 font-medium">代金券</th>
                   <th className="py-3 font-medium">提交时间</th>
                 </tr>
@@ -376,7 +377,7 @@ const AdminDashboard = () => {
               <tbody>
                 {surveyRows.length === 0 ? (
                   <tr>
-                    <td colSpan="6" className="py-8 text-center text-gray-500">
+                    <td colSpan="7" className="py-8 text-center text-gray-500">
                       暂无问卷提交。用户进入商品页并提交问卷后，这里会按访客和商品显示答案。
                     </td>
                   </tr>
@@ -404,6 +405,15 @@ const AdminDashboard = () => {
                     </td>
                     <td className="py-3 pr-4 text-gray-700">{row.surveyDiscoverySourceLabel || '-'}</td>
                     <td className="py-3 pr-4 text-gray-700">{row.surveyAiPlatformLabel || '-'}</td>
+                    <td className="py-3 pr-4 text-gray-700">
+                      {row.surveyAiQuestionLabels?.length ? (
+                        <ul className="min-w-[320px] list-disc pl-4 space-y-1">
+                          {row.surveyAiQuestionLabels.map((question) => (
+                            <li key={question}>{question}</li>
+                          ))}
+                        </ul>
+                      ) : '-'}
+                    </td>
                     <td className="py-3 pr-4 text-gray-700">
                       {row.voucherAmount ? `${row.voucherAmount} ${row.voucherCurrency || 'RMB'}` : '-'}
                     </td>

@@ -54,6 +54,13 @@ const isAdmin = (request) => {
   return crypto.timingSafeEqual(Buffer.from(providedToken), Buffer.from(expectedToken));
 };
 
+const sanitizeStringArray = (value, itemLimit = 20, itemLength = 220) => {
+  if (!Array.isArray(value)) return [];
+  return value
+    .slice(0, itemLimit)
+    .map((item) => String(item).slice(0, itemLength));
+};
+
 const sanitizeEvent = (input) => {
   const rawEvent = input?.event || input || {};
   const eventType = String(rawEvent.type || '');
@@ -81,6 +88,8 @@ const sanitizeEvent = (input) => {
     surveyDiscoverySourceLabel: rawEvent.surveyDiscoverySourceLabel ? String(rawEvent.surveyDiscoverySourceLabel).slice(0, 120) : undefined,
     surveyAiPlatform: rawEvent.surveyAiPlatform ? String(rawEvent.surveyAiPlatform).slice(0, 80) : undefined,
     surveyAiPlatformLabel: rawEvent.surveyAiPlatformLabel ? String(rawEvent.surveyAiPlatformLabel).slice(0, 120) : undefined,
+    surveyAiQuestionValues: sanitizeStringArray(rawEvent.surveyAiQuestionValues, 12, 40),
+    surveyAiQuestionLabels: sanitizeStringArray(rawEvent.surveyAiQuestionLabels, 12, 260),
     voucherAmount: Number.isFinite(Number(rawEvent.voucherAmount)) ? Number(rawEvent.voucherAmount) : undefined,
     voucherCurrency: rawEvent.voucherCurrency ? String(rawEvent.voucherCurrency).slice(0, 20) : undefined
   };

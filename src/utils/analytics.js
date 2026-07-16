@@ -231,6 +231,8 @@ export const summarizeAnalytics = (products, categories, eventOverride) => {
         surveyDiscoverySourceLabel: '',
         surveyAiPlatform: '',
         surveyAiPlatformLabel: '',
+        surveyAiQuestionValues: [],
+        surveyAiQuestionLabels: [],
         voucherAmount: 0,
         voucherCurrency: '',
         surveySubmittedAt: '',
@@ -299,6 +301,8 @@ export const summarizeAnalytics = (products, categories, eventOverride) => {
         row.surveyDiscoverySourceLabel = event.surveyDiscoverySourceLabel || row.surveyDiscoverySourceLabel;
         row.surveyAiPlatform = event.surveyAiPlatform || '';
         row.surveyAiPlatformLabel = event.surveyAiPlatformLabel || '';
+        row.surveyAiQuestionValues = Array.isArray(event.surveyAiQuestionValues) ? event.surveyAiQuestionValues : [];
+        row.surveyAiQuestionLabels = Array.isArray(event.surveyAiQuestionLabels) ? event.surveyAiQuestionLabels : [];
         row.voucherAmount = Number(event.voucherAmount) || row.voucherAmount;
         row.voucherCurrency = event.voucherCurrency || row.voucherCurrency;
         row.surveySubmittedAt = event.timestamp || row.surveySubmittedAt;
